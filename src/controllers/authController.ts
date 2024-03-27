@@ -5,7 +5,6 @@ import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 import { BadRequestException } from "../exceptions/bad-requests";
 import { ErrorCode } from "../exceptions/root";
-import { UnProccessableEntity } from "../exceptions/validation";
 import { signUpSchema } from "../schema/users";
 import { NotFoundException } from "../exceptions/not-found";
 
@@ -57,5 +56,13 @@ export const login = async(req:Request,res:Response) => {
         message: "User Logged In Successfully",
         token
     })
-    
+}
+
+// me -> return the logged in user
+export const getUser = async(req:any, res:Response) => {
+
+    res.status(200).json({
+        message: "Logined In User Information",
+        user: req.user
+    })
 }
