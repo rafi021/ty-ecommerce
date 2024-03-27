@@ -1,12 +1,11 @@
 import express, { Express, Request, Response } from "express";
+import { PORT } from "./secrets";
 const app:Express = express();
 
 app.get("/", (req:Request, res:Response) => {
   res.send("Hello World!");
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
+app.listen(PORT||3000, () => {
   console.log(`App listening on port ${PORT}`);
 });
