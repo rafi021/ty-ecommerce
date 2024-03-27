@@ -9,14 +9,18 @@ import { UnProccessableEntity } from "../exceptions/validation";
 import { signUpSchema } from "../schema/users";
 
 export const signUp = async(req:Request,res:Response, next:NextFunction) => {
-    try {
+
+        // validation check
         signUpSchema.parse(req.body);
         const { name,email,password } = req.body;
 
+        // check if user already exists
         let user = await prismaclient.user.findFirst({where: {email}});
         if(user){
             next(new BadRequestException("User Already Exists", ErrorCode.USER_ALREADY_EXISTS)) ;
         }
+
+        // then create new user
         user = await prismaclient.user.create({
             data:{
                 name,
@@ -28,11 +32,7 @@ export const signUp = async(req:Request,res:Response, next:NextFunction) => {
         res.status(201).json({
             message: "User Created Successfully",
             user
-        }) 
-    } catch (error:any) {
-        next(new UnProccessableEntity(error?.issues, "Unproccessable entity", ErrorCode.UNPROCESSABL_ENTITY))
-    }
-    
+        });
 }
 
 export const login = async(req:Request,res:Response) => {
