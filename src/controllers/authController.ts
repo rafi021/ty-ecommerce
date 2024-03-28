@@ -40,7 +40,7 @@ export const login = async(req:Request,res:Response) => {
 
     let user = await prismaclient.user.findFirst({where: {email}});
     if(!user){
-        throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
+        throw new NotFoundException("User not found", ErrorCode.NOT_FOUND);
     }
     if(!compareSync(password, user.password)){
         throw new BadRequestException("Password is incorrect", ErrorCode.INVALID_CREDENTIALS);
