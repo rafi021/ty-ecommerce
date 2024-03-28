@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prismaclient } from "../config/prisma";
 import { NotFoundException } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
+import { productSchema } from "../schema/product";
 
 export const getAllProducts = async (req:any, res:Response) => {
     const count = await prismaclient.product.count();
@@ -25,7 +26,7 @@ export const getProduct = async (req:Request, res:Response) => {
 }
 
 export const createProduct = async (req:Request, res:Response) => {
-    
+    productSchema.parse(req.body);
     const product = await prismaclient.product.create({
         data: {
             ...req.body,
