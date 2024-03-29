@@ -19,13 +19,15 @@ enum Role {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  email      String   @unique
-  password   String
-  role       Role     @default(USER)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id                       Int      @id @default(autoincrement())
+  name                     String
+  email                    String   @unique
+  password                 String
+  role                     Role     @default(USER)
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
+  defaultShippingAddressId Int?
+  defaultBillingAddressId  Int?
 
   addresses Address[]
 
@@ -45,11 +47,11 @@ model Address {
   updated_at DateTime @updatedAt
 }
 
-model Category{
-  id Int @id @default(autoincrement())
-  title String
-  slug String
-  isActive Boolean @default(true)
+model Category {
+  id         Int      @id @default(autoincrement())
+  title      String
+  slug       String
+  isActive   Boolean  @default(true)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
@@ -62,5 +64,6 @@ model Product {
   tags        String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+
   @@map("products")
 }

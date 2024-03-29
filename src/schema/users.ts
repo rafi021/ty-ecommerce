@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const signUpSchema = z.object({
+export const SignUpSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string().min(4),
@@ -12,4 +12,10 @@ export const AddressSchema = z.object({
     city: z.string(),
     country: z.string(),
     postcode: z.string().length(4),
+});
+
+export const UpdateUserSchema = z.object({
+    name: z.string().optional(),
+    defaultShippingAddress: z.number().nullable(),
+    defaultBillingAddress: z.number().nullable(),
 });

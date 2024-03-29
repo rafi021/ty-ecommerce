@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
-import { AddressSchema } from '../schema/users';
+import { AddressSchema, UpdateUserSchema} from '../schema/users';
 import { prismaclient } from '../config/prisma';
-import { User } from '@prisma/client';
+import { Address, User } from '@prisma/client';
+import { NotFoundException } from '../exceptions/not-found';
+import { ErrorCode } from '../exceptions/root';
+import { BadRequestException } from '../exceptions/bad-requests';
 
 export const addAddress = async(req:any, res:Response) => {
     AddressSchema.parse(req.body);
@@ -52,4 +55,53 @@ export const listAddress = async(req:any,res:Response) => {
         take: 5,
     });
     res.status(200).json(addresses); 
+}
+
+export const updateUser = async(req:any,res:Response) => {
+    const validatedData = UpdateUserSchema.parse(req.body);
+    let shippingAddress:Address;
+    let billingAddress:Address;
+
+    if(validatedData.defaultShippingAddress){
+        try {
+            shippingAddress = await prismaclient.address.findFirstOrThrow({
+                where:{
+                    id: validatedData.defaultShippingAddress
+                }
+            })
+        } catch (error) {
+            throw new NotFoundException("Address not found", ErrorCode.NOT_FOUND);
+        }
+
+        
+        if(shippingAddress.userId !== req.user.id){
+            throw new BadRequestException("Address does not belog to user", ErrorCode.INTERNAL_EXCEPTION);
+        }
+    }
+    if(validatedData.defaultBillingAddress){
+        try {
+            billingAddress = await prismaclient.address.findFirstOrThrow({
+                where:{
+                    id: validatedData.defaultBillingAddress
+                }
+            })
+        } catch (error) {
+            throw new NotFoundException("Address not found", ErrorCode.NOT_FOUND);
+        }
+        if(billingAddress.userId !== req.user.id){
+            throw new BadRequestException("Address does not belog to user", ErrorCode.INTERNAL_EXCEPTION);
+        }
+    }
+
+    const updatedUser = await prismaclient.user.update({
+        where: {
+            id: req.user.id
+        },
+        data: {
+           name: validatedData.name,
+            defaultShippingAddressId: validatedData.defaultShippingAddress,
+            defaultBillingAddressId: validatedData.defaultBillingAddress
+        }
+    })
+    res.status(200).json(updatedUser);
 }

@@ -5,13 +5,13 @@ import * as jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../secrets";
 import { BadRequestException } from "../exceptions/bad-requests";
 import { ErrorCode } from "../exceptions/root";
-import { signUpSchema } from "../schema/users";
+import { SignUpSchema } from "../schema/users";
 import { NotFoundException } from "../exceptions/not-found";
 
 export const signUp = async(req:Request,res:Response, next:NextFunction) => {
 
         // validation check
-        signUpSchema.parse(req.body);
+        SignUpSchema.parse(req.body);
         const { name,email,password } = req.body;
 
         // check if user already exists
