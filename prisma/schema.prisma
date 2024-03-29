@@ -27,7 +27,31 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  addresses Address[]
+
   @@map("users")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement())
+  lineOne    String
+  lineTwo    String?
+  city       String
+  country    String
+  postcode   String
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Category{
+  id Int @id @default(autoincrement())
+  title String
+  slug String
+  isActive Boolean @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Product {
@@ -38,6 +62,5 @@ model Product {
   tags        String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
-
   @@map("products")
 }
