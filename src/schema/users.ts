@@ -19,3 +19,8 @@ export const UpdateUserSchema = z.object({
     defaultShippingAddress: z.number().nullable(),
     defaultBillingAddress: z.number().nullable(),
 });
+
+export const UpdateUserRoleSchema = z.object({
+    role: z.string()
+});
+
